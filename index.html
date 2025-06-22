@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GitHub User Card</title>
+  <style>
+   .searchbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+    input{
+      padding: 10px;
+      width: 250px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .card {
+      width: 300px;
+      margin: 50px auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgb(255, 253, 253);
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #6f6f6f;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-body h2 {
+      margin: 10px 0;
+    }
+
+    .card-body p {
+      margin: 5px 0;
+      color: #000;
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body style="background-color: #212121 ;color: #fff;">
+
+    <div class="searchbox">
+        <input type="text" id="username" placeholder="Enter Github Username">
+        <button onclick="getuser()">Search</button>
+    </div>
+
+  <div class="card" id="user-card">
+<img src="Searching Search Engine GIF by PBS KIDS.gif">
+
+  </div>
+
+  <script>
+    function getuser(){
+        const username = document.getElementById('username').value.trim();//to remove white space i use trim
+        if(!username)
+            return;// i did not close bracket cuz it will be undefined outside
+    const xhr = new XMLHttpRequest();
+    const requestUrl = `https://api.github.com/users/${username}`;
+  xhr.open('GET', requestUrl);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          const card = document.getElementById('user-card');
+
+          if (xhr.status === 200) {
+            const data = JSON.parse(this.responseText);
+            card.innerHTML = `
+              <img src="${data.avatar_url}" alt="User Avatar" />
+              <div class="card-body">
+                <h2>${data.name || data.login}</h2>
+                <p><strong>Followers:</strong> ${data.followers}</p>
+                <p><strong>Following:</strong> ${data.following}</p>
+                <p><strong>Public Repos:</strong> ${data.public_repos}</p>
+              </div>
+            `;
+          } else {
+            card.innerHTML = `<p style="color: red;">User not found. Please try another username.</p>`;
+          }
+        }
+      
+    }
+      xhr.send();
+}
+    
+  </script>
+
+</body>
+</html>
